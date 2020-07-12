@@ -150,6 +150,20 @@ export const IconCheckBoxRound = styled.div`
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 `;
 
+export const IconRadioButtonRound = styled.div`
+  width: 63px;
+  height: 62px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: ${props =>
+    props.checked ? '4px solid #daa520' : '1px solid #daa520'};
+  box-sizing: border-box;
+  border-radius: 50%;
+  background: ${props => (props.checked ? 'rgba(66, 226, 248, 0.3)' : 'white')};
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+`;
+
 export const CheckBoxIcon = styled.img`
   height: 40px;
   width: 40px;
@@ -175,6 +189,14 @@ export const HiddenCheckbox = styled.input.attrs({ type: 'checkbox' })`
   top: 40px;
   left: 20px;
 
+  opacity: 0;
+`;
+
+export const HiddenRadioButton = styled.input.attrs({ type: 'radio' })`
+  transform: scale(3);
+  position: relative;
+  left: -50px;
+  top: 20px;
   opacity: 0;
 `;
 

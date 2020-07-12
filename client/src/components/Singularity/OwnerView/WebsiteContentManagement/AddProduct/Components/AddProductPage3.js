@@ -8,17 +8,13 @@ import {
 } from 'styles/Singularity/ApplicationStyles/PageDividerStyles';
 import {
   InputLabel,
-  InputText,
-  InputTextContainer,
-  UploadImageBackground,
-  InputParagraph,
-  InputSelect,
-  InputOption,
   IconCheckBoxRound,
   CheckBoxIcon,
   CheckBoxIconName,
   IconCheckBoxRoundButton,
-  HiddenCheckbox
+  HiddenCheckbox,
+  HiddenRadioButton,
+  IconRadioButtonRound
 } from 'styles/Singularity/ApplicationStyles/FormStyles/InputStyles';
 import {
   ActionButton,
@@ -35,12 +31,15 @@ import {
   FormSectionNameContainer
 } from 'styles/Singularity/ApplicationStyles/ContainerStyles';
 
+import vegIcon from 'img/piatto/icons/vegicon.svg';
+import nonVegIcon from 'img/piatto/icons/nonvegicon.svg';
+
 import addProductContext from 'components/Singularity/OwnerView/WebsiteContentManagement/AddProduct/State/addProductContext.js';
 
 const AddProductPage3 = () => {
-  useEffect(() => {
-    getProductStatusData();
-  }, []);
+  const [isVeg, setIsVeg] = useState(false);
+
+  const [isNonVeg, setIsNonVeg] = useState(false);
 
   const AddProductContext = useContext(addProductContext);
 
@@ -48,8 +47,22 @@ const AddProductPage3 = () => {
     productStatusData,
     getProductStatusData,
     handleProductStatusChange,
-    nextStep
+    nextStep,
+    handleChangeFor,
+    cuisine
   } = AddProductContext;
+
+  useEffect(() => {
+    getProductStatusData();
+    if (cuisine === 'veg') {
+      setIsVeg(true);
+      setIsNonVeg(false);
+    }
+    if (cuisine === 'Non veg') {
+      setIsVeg(false);
+      setIsNonVeg(true);
+    }
+  }, [cuisine]);
 
   return (
     <Fragment>
@@ -67,8 +80,22 @@ const AddProductPage3 = () => {
           </PTSansText>
         </FormSectionNameContainer>
         <FlexRowContainer width="183px">
-          <IconCheckBoxRound />
-          <IconCheckBoxRound />
+          <IconRadioButtonRound checked={isVeg}>
+            <CheckBoxIcon src={vegIcon} />
+          </IconRadioButtonRound>
+          <HiddenRadioButton
+            name="cuisine"
+            value="veg"
+            onChange={handleChangeFor('cuisine')}
+          />
+          <IconRadioButtonRound checked={isNonVeg}>
+            <CheckBoxIcon src={nonVegIcon} />
+          </IconRadioButtonRound>
+          <HiddenRadioButton
+            name="cuisine"
+            value="Non veg"
+            onChange={handleChangeFor('cuisine')}
+          />
         </FlexRowContainer>
         <PartialWidthDivider />
         <FormSectionNameContainer>

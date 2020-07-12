@@ -38,6 +38,9 @@ import {
   ProductNamePriceContainer
 } from 'styles/Singularity/OwnerView/ReviewDetails';
 
+import VegIcon from 'components/Singularity/ApplicationView/VegIcon.js';
+import NonVegIcon from 'components/Singularity/ApplicationView/NonVegIcon.js';
+
 const AddProductPage7 = () => {
   const AddProductContext = useContext(addProductContext);
 
@@ -48,8 +51,14 @@ const AddProductPage7 = () => {
     productDescription,
     additionalInformation,
     productPrice,
-    selectedAddOnItemItems
+    selectedAddOnItemItems,
+    cuisine
   } = AddProductContext;
+
+  let isVeg = false;
+  if (cuisine === 'veg') {
+    isVeg = true;
+  }
 
   return (
     <Fragment>
@@ -63,7 +72,9 @@ const AddProductPage7 = () => {
       <FlexRowContainer width="350px">
         <ProductImage src={filesrc} />
         <MainAdditionalInformation>
+          {isVeg ? <VegIcon /> : <NonVegIcon />}
           <PTSansText fontSize="14px">{productName}</PTSansText>
+
           <ProductDescription>
             <PTSansText fontSize="12px" color="#BDBDBD">
               {productDescription}
@@ -91,7 +102,7 @@ const AddProductPage7 = () => {
         </MainAdditionalInformation>
       </FlexRowContainer>
 
-      <FullWidthDivider />
+      <FullWidthDivider style={{ marginTop: '15px' }} />
       <ProductNamePriceContainer>
         <PTSansText fontSize="14px">{productName}</PTSansText>
         <PTSansText fontSize="14px">{productPrice}</PTSansText>

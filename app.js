@@ -15,7 +15,7 @@ const userRouter = require('./routes/userRoutes');
 //Piatto Routers
 
 const categoryRouter = require('./routes/categoryRoutes');
-const delicacyRouter = require('./routes/delicacyRoutes');
+const productRouter = require('./routes/productRoutes');
 const addOnRouter = require('./routes/addOnRoutes');
 
 const additionalProductInformationRouter = require('./routes/additionalProductInformationRoutes');
@@ -76,11 +76,9 @@ app.use('/api/v1/users', userRouter);
 
 // Piatto Routes
 
-app.use('/api/v1/category', categoryRouter);
-app.use('/api/v1/delicacy', delicacyRouter);
-
 //Piatto production routes
-
+app.use('/api/v1/category', categoryRouter);
+app.use('/api/v1/product', productRouter);
 app.use('/api/v1/addOn', addOnRouter);
 app.use(
   '/api/v1/additionalProductInfomation',

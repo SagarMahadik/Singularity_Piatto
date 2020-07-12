@@ -47,7 +47,7 @@ const AddProductState = props => {
     productVariantData: [],
     additionalInformation: [],
     selectedAddOnItemItems: [],
-    nutritionData: [
+    nutritionDetails: [
       {
         nutrient: 'protiens',
         value: ''
@@ -70,10 +70,91 @@ const AddProductState = props => {
     selectedCategory: '',
     productFileName: '',
     filesrc: '',
-    step: 1
+    step: 1,
+    file: null
   };
 
   const fileInputRef = useRef();
+
+  const [state, dispatch] = useReducer(addProductReducer, initialState);
+
+  useEffect(() => {
+    const {
+      Category,
+      SubCategory,
+      productName,
+      cuisine,
+      productDescription,
+      crossSellPitch,
+      productPrice,
+      productImageURL,
+      nutritionDetails,
+      additionalInformation,
+      selectedAddOnItemItems
+    } = state;
+
+    const addDataToDB = async (
+      Category,
+      SubCategory,
+      productName,
+      cuisine,
+      productDescription,
+      crossSellPitch,
+      productPrice,
+      productImageURL,
+      nutritionDetails,
+      additionalInformation,
+      selectedAddOnItemItems
+    ) => {
+      var productAddOnItems = selectedAddOnItemItems.map(item => item._id);
+      console.log(productAddOnItems);
+
+      const body = JSON.stringify({
+        Category,
+        SubCategory,
+        productName,
+        cuisine,
+        productDescription,
+        crossSellPitch,
+        productPrice,
+        productImageURL,
+        nutritionDetails,
+        additionalInformation,
+        productAddOnItems
+      });
+      console.log(body);
+
+      const config = {
+        headers: {
+          'Content-Type': 'application/JSON'
+        }
+      };
+      const res = await axios.post('/api/v1/product', body, config);
+      console.log(res);
+
+      dispatch({
+        type: COMPLETE_FORM
+      });
+    };
+
+    if (productImageURL !== '') {
+      addDataToDB(
+        Category,
+        SubCategory,
+        productName,
+        cuisine,
+        productDescription,
+        crossSellPitch,
+        productPrice,
+        productImageURL,
+        nutritionDetails,
+        additionalInformation,
+        selectedAddOnItemItems
+      );
+    } else {
+      console.log('In use effect');
+    }
+  }, [state.productImageURL]);
 
   const setLoading = () => dispatch({ type: SET_LOADING });
 
@@ -153,19 +234,20 @@ const AddProductState = props => {
       payload: {
         input1,
         value1: e.target.files[0].name,
-        src: URL.createObjectURL(e.target.files[0])
+        src: URL.createObjectURL(e.target.files[0]),
+        imageFIle: e.target.files[0]
       }
     });
   };
 
   const setNutrientData = () => {
-    const updatedObj1 = { ...state.nutritionData[0], value: state.protiens };
+    const updatedObj1 = { ...state.nutritionDetails[0], value: state.protiens };
     const updatedObj2 = {
-      ...state.nutritionData[1],
+      ...state.nutritionDetails[1],
       value: state.carbohydrates
     };
-    const updatedObj3 = { ...state.nutritionData[2], value: state.fats };
-    const updatedObj4 = { ...state.nutritionData[3], value: state.calories };
+    const updatedObj3 = { ...state.nutritionDetails[2], value: state.fats };
+    const updatedObj4 = { ...state.nutritionDetails[3], value: state.calories };
 
     const updatedNutritionData = [
       updatedObj1,
@@ -371,7 +453,38 @@ const AddProductState = props => {
     });
   };
 
-  const [state, dispatch] = useReducer(addProductReducer, initialState);
+  const fileUpload = () => {
+    setLoading();
+    console.log('In file updaloed');
+    console.log(fileInputRef);
+    const fileForUpload = state.file;
+
+    const formData = new FormData();
+    formData.append('file', fileForUpload);
+    formData.append('upload_preset', 'xprl6rwq');
+    const options = {
+      method: 'POST',
+      body: formData
+    };
+
+    return fetch(
+      'https://api.Cloudinary.com/v1_1/antilibrary/image/upload',
+      options
+    )
+      .then(res => res.json())
+      .then(res =>
+        dispatch({
+          type: SET_FILEURL,
+          payload: res.secure_url
+        })
+      );
+  };
+
+  const onSubmit = e => {
+    e.preventDefault();
+    console.log(state.file);
+    fileUpload();
+  };
 
   return (
     <addProductContext.Provider
@@ -401,6 +514,8 @@ const AddProductState = props => {
         additionalInformation: state.additionalInformation,
         fileInputRef,
         productFileName: state.productFileName,
+        productImageURL: state.productImageURL,
+        file: state.file,
         nextStep,
         previousStep,
         handleChangeFor,
@@ -415,7 +530,8 @@ const AddProductState = props => {
         getProductVariantData,
         handleProductVariantChange,
         setNutrientData,
-        onFileSelect
+        onFileSelect,
+        onSubmit
       }}
     >
       {props.children}

@@ -38,18 +38,21 @@ export default (state, action) => {
         ...state,
         [input]: value
       };
+
     case SET_PRODUCTFILEDETAILS:
-      const { input1, value1, src } = action.payload;
+      const { input1, value1, src, imageFIle } = action.payload;
       return {
         ...state,
         [input1]: value1,
         filesrc: src,
+        file: imageFIle,
         loading: false
       };
+
     case SET_FILEURL:
       return {
         ...state,
-        itemIconURL: action.payload,
+        productImageURL: action.payload,
         loading: false
       };
     case COMPLETE_FORM:
@@ -124,7 +127,7 @@ export default (state, action) => {
     case UPDATE_NUTRITIONDATA:
       return {
         ...state,
-        nutritionData: action.payload,
+        nutritionDetails: action.payload,
         step: action.currentStep + 1
       };
   }

@@ -52,7 +52,8 @@ const AddProductPage7 = () => {
     additionalInformation,
     productPrice,
     selectedAddOnItemItems,
-    cuisine
+    cuisine,
+    onSubmit
   } = AddProductContext;
 
   let isVeg = false;
@@ -134,7 +135,7 @@ const AddProductPage7 = () => {
           })}
         </FlexRowContainer>
 
-        <ActionButton width="156px" value="submit" onClick={setNutrientData}>
+        <ActionButton width="156px" value="submit" onClick={onSubmit}>
           <ButtonText>Preview</ButtonText>
         </ActionButton>
       </CenterAlignedColumnContainer>
